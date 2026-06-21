@@ -1,0 +1,195 @@
+
+
+
+.match-hero {
+  text-align: center;
+}
+
+.match-title {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  max-width: none;
+}
+
+.match-title .vs {
+  color: var(--muted);
+  font-weight: 400;
+  margin: 0 8px;
+}
+
+.match-badges {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.match-badges .badge {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+  padding: 4px 12px;
+  border-radius: 99px;
+}
+
+.details strong {
+  color: var(--text);
+}
+
+.match-meta {
+  text-align: center;
+  margin-bottom: 18px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.meta-line {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.meta-stadium {
+  margin-top: 6px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.match-score {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 18px;
+}
+
+.team.home {
+  flex: 0 0 45%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  text-align: right;
+}
+
+.team.away {
+  flex: 0 0 45%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  text-align: left;
+}
+
+.team-name {
+  font-weight: 700;
+  font-size: 1.95rem;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.team-flag {
+  width: 56px;
+  height: 38px;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.18);
+  flex: 0 0 auto;
+}
+
+.score.big {
+  flex: 0 0 10%;
+  text-align: center;
+  font-size: 2.4rem;
+  font-variant-numeric: tabular-nums;
+}
+
+
+
+.goals-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+  position: relative;
+  width: 100%;
+}
+
+/* A linha cinzenta vertical mesmo no centro */
+.goals-timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background-color: var(--border, #e2e8f0);
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+/* Linha do golo dividida em 3 partes: Golo | Minuto (Centro) | Vazio */
+.goal-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.goal-content, .goal-spacer {
+  flex: 0 0 calc(50% - 24px); /* Ocupa metade do ecrã menos o espaço da bolinha */
+}
+
+/* Alinhamento quando o golo é da Home (Esquerda) */
+.goal-row.home-goal {
+  flex-direction: row; /* Conteúdo -> Minuto -> Spacer */
+}
+.goal-row.home-goal .goal-content {
+  text-align: right;
+}
+
+/* Alinhamento quando o golo é da Away (Direita) */
+.goal-row.away-goal {
+  flex-direction: row-reverse; /* Spacer -> Minuto -> Conteúdo */
+}
+.goal-row.away-goal .goal-content {
+  text-align: left;
+}
+
+/* A bolinha do minuto no centro */
+.goal-minute {
+  flex: 0 0 48px; /* Largura fixa para a zona central */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.goal-minute span {
+  background: var(--surface, #ffffff);
+  border: 2px solid #22c55e;
+  color: #22c55e;
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+
+.pill {
+  background: var(--surface-success, #e6f4ea);
+  /* color: var(--text-success, #136c33); */
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
