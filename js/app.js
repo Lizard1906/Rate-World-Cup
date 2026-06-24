@@ -200,7 +200,7 @@ function render(matches) {
     const sorted = [...matches].sort((a, b) => parseMatchStart(a) - parseMatchStart(b));
     const pastMatches = sorted.filter((match) => match.score?.ft?.every(Number.isFinite));
     const onGoingMatches = sorted.filter((match) => parseMatchStart(match) <= now && !pastMatches.includes(match));
-    const projectedMatches = sorted.filter((match) => parseMatchStart(match) >= now && (convertTeamNameToAlias(match.team1) === false && convertTeamNameToAlias(match.team2) === false));
+    const projectedMatches = sorted.filter((match) => parseMatchStart(match) >= now && (convertTeamNameToAlias(match.team1) === false || convertTeamNameToAlias(match.team2) === false));
     const upcomingMatches = sorted.filter((match) => parseMatchStart(match) >= now && !projectedMatches.includes(match));
 
     app.innerHTML = `
