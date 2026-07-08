@@ -1,6 +1,6 @@
 const MATCHES_STORAGE_KEY = "rate-wc-matches";
 const TEAMS_STORAGE_KEY = "rate-wc-teams";
-const YEAR_STORAGE_KEY = "rate-wc-year";
+// const YEAR_STORAGE_KEY = "rate-wc-year";
 
 const app = document.getElementById("app");
 const searchEl = document.getElementById("search");

@@ -1,5 +1,6 @@
-const DATA_URL = "https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json";
-const TEAMS_URL = "https://raw.githubusercontent.com/openfootball/worldcup.json/refs/heads/master/2026/worldcup.teams.json";
+const CURRENT_YEAR = window.SiteNav?.getYear?.() ?? 2026;
+const DATA_URL = `https://raw.githubusercontent.com/openfootball/worldcup.json/master/${CURRENT_YEAR}/worldcup.json`;
+const TEAMS_URL = `https://raw.githubusercontent.com/openfootball/worldcup.json/refs/heads/master/${CURRENT_YEAR}/worldcup.teams.json`;
 const MATCHES_STORAGE_KEY = "rate-wc-matches";
 const TEAMS_STORAGE_KEY = "rate-wc-teams";
 

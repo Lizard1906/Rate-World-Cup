@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rate World Cup - Stats</title>
+
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/stats.css">
+</head>
+
+<body>
+
+    <div id="site-nav"></div>
+
+    <main class="page">
+
+        <section class="hero">
+
+            <p class="eyebrow">Stats</p>
+
+            <h1>World Cup Statistics</h1>
+
+            <p class="lead">
+                Explore tournament statistics and your personal viewing history.
+            </p>
+
+            <div class="toolbar">
+                <div class="stats-filter">
+                    <button class="filter-btn" data-filter="all">
+                        All Matches
+                    </button>
+
+                    <button class="filter-btn active" data-filter="watched">
+                        Watched Matches
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- PERSONAL STATS -->
+
+        <section id="watched-section" class="content">
+
+            <div class="section-card">
+
+                <div class="section-header">
+                    <h2>Your Progress</h2>
+                </div>
+
+                <div id="progress-card"></div>
+
+            </div>
+
+
+            <div class="stats-grid two">
+
+                <div class="section-card">
+
+                    <div class="section-header">
+                        <h2>Best Average Rating by Team</h2>
+                    </div>
+
+                    <div id="best-rated-teams"></div>
+
+                </div>
+
+
+                <div class="section-card">
+
+                    <div class="section-header">
+                        <h2>Most Watched Teams</h2>
+                    </div>
+
+                    <div id="most-watched-teams"></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- TOURNAMENT STATS -->
+
+        <section class="content">
+
+            <div class="stats-grid three">
+
+                <div class="section-card">
+
+                    <div class="section-header">
+                        <h2>Top Scorers</h2>
+                    </div>
+
+                    <div id="top-scorers"></div>
+
+                </div>
+
+
+                <div class="section-card">
+
+                    <div class="section-header">
+                        <h2>Top Teams by Goals</h2>
+                    </div>
+
+                    <div id="top-teams-goals"></div>
+
+                </div>
+
+
+                <div class="section-card">
+
+                    <div class="section-header">
+                        <h2>Top Teams by Wins</h2>
+                    </div>
+
+                    <div id="top-teams-wins"></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- MODAL -->
+
+<dialog id="stats-modal" class="stats-modal">
+
+    <div class="stats-modal-header">
+
+        <h2 id="stats-modal-title" class="stats-modal-title sortable">
+            Statistics
+            <span id="stats-modal-order" class="sort-icon">↓</span>
+        </h2>
+
+        <button id="stats-modal-close" aria-label="Close">
+            &times;
+        </button>
+
+    </div>
+
+    <div id="stats-modal-body"></div>
+
+</dialog>
+
+    <script src="js/navigation.js"></script>
+    <script src="js/ratings.js"></script>
+    <script src="js/flags.js"></script>
+    <script src="js/utc.js"></script>
+    <script src="js/stats.js"></script>
+
+</body>
+
+</html>

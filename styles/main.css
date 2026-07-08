@@ -47,6 +47,75 @@ input {
   padding: 24px 0 40px;
 }
 
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(18px);
+  background: rgba(255, 255, 255, 0.82);
+  border-bottom: 1px solid rgba(219, 227, 238, 0.8);
+}
+
+.site-nav__inner {
+  width: min(1200px, calc(100% - 24px));
+  margin: 0 auto;
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.site-nav__brand {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 1.02rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.site-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.site-nav__link {
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.site-nav__link:hover {
+  color: var(--text);
+}
+
+.site-nav__year {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.site-nav__year select {
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.site-nav__year select:focus {
+  outline: none;
+}
+
 .hero {
   position: relative;
   overflow: hidden;
@@ -454,6 +523,18 @@ footer {
 }
 
 @media (max-width: 760px) {
+  .site-nav__inner {
+    width: min(100% - 16px, 1200px);
+    min-height: auto;
+    padding: 12px 0;
+    flex-wrap: wrap;
+  }
+
+  .site-nav__links {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .page {
     width: min(100% - 16px, 1200px);
     padding-top: 16px;
