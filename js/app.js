@@ -1,11 +1,24 @@
-const DATA_URL = "https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json";
-const TEAMS_URL = "https://raw.githubusercontent.com/openfootball/worldcup.json/refs/heads/master/2026/worldcup.teams.json";
 const MATCHES_STORAGE_KEY = "rate-wc-matches";
 const TEAMS_STORAGE_KEY = "rate-wc-teams";
-const RATE_STORAGE_KEY = "rate-wc-rates";
+// const YEAR_STORAGE_KEY = "rate-wc-year";
 
 const app = document.getElementById("app");
 const searchEl = document.getElementById("search");
+
+function getYear() {
+    const year = localStorage.getItem(YEAR_STORAGE_KEY);
+    return year ? Number(year) : 2026;
+}
+
+function getDataUrl() {
+    const year = getYear();
+    return `https://raw.githubusercontent.com/openfootball/worldcup.json/master/${year}/worldcup.json`;
+}
+
+function getTeamsUrl() {
+    const year = getYear();
+    return `https://raw.githubusercontent.com/openfootball/worldcup.json/master/${year}/worldcup.teams.json`;
+}
 
 let allMatches = [];
 let allTeams = [];
@@ -50,7 +63,7 @@ function normalizeMatch(match, teamsDict) {
 
     return {
         ...match,
-        id: `2026_WC_${round}_${teamsDict[match.team1.toLowerCase()]}_${teamsDict[match.team2.toLowerCase()]}`,
+        id: `${getYear()}_WC_${round}_${teamsDict[match.team1.toLowerCase()]}_${teamsDict[match.team2.toLowerCase()]}`,
         round: convertRoundLabel(match.round),
         date: convertedDateTime.date,
         time: convertedDateTime.time,
@@ -149,21 +162,24 @@ function renderMatch(match, variant) {
     const played = variant === "past";
     const score = formatScore(match);
     const displayScore = played ? score : "vs";
+    const matchLabel = `${match.team1} vs ${match.team2}`;
 
     return `
-    <a href="match.html?id=${encodeURIComponent(match.id)}" class="match-link">
         <article class="match ${variant}">
-        <div class="meta">
-            <span>${formatDate(match.date)} ${match.time ?? ""}</span>
-            <span class="match-group">${getRoundLabel(match)}</span>
+        <a href="match.html?id=${encodeURIComponent(match.id)}" class="match-link" aria-label="Open match details for ${matchLabel}"></a>
+        <div class="match-content">
+          <div class="meta">
+              <span>${formatDate(match.date)} ${match.time ?? ""}</span>
+              <span class="match-group">${getRoundLabel(match)}</span>
+          </div>
+          <div class="match-line">
+              ${renderTeamFlag(match.team1)}
+              <span class="score">${displayScore}</span>
+              ${renderTeamFlag(match.team2)}
+          </div>
         </div>
-        <div class="match-line">
-            ${renderTeamFlag(match.team1)}
-            <span class="score">${displayScore}</span>
-            ${renderTeamFlag(match.team2)}
-        </div>
+        ${variant === "to-review" || variant === "reviewed" ? renderRating(match.id, { size: "sm" }) : ""}
         </article>
-    </a>
   `;
 }
 
@@ -199,12 +215,15 @@ function render(matches) {
     console.log("Current time", new Date(now).toISOString());
     const sorted = [...matches].sort((a, b) => parseMatchStart(a) - parseMatchStart(b));
     const pastMatches = sorted.filter((match) => match.score?.ft?.every(Number.isFinite));
+    const toReviewMatches = pastMatches.filter((match) => getRating(match.id) === undefined);
+    const reviewedMatches = pastMatches.filter((match) => getRating(match.id) !== undefined);
     const onGoingMatches = sorted.filter((match) => parseMatchStart(match) <= now && !pastMatches.includes(match));
-    const projectedMatches = sorted.filter((match) => parseMatchStart(match) >= now && (convertTeamNameToAlias(match.team1) === false && convertTeamNameToAlias(match.team2) === false));
+    const projectedMatches = sorted.filter((match) => parseMatchStart(match) >= now && (convertTeamNameToAlias(match.team1) === false || convertTeamNameToAlias(match.team2) === false));
     const upcomingMatches = sorted.filter((match) => parseMatchStart(match) >= now && !projectedMatches.includes(match));
 
     app.innerHTML = `
-    ${renderSection("Past Matches", pastMatches, "past", false)}
+    ${renderSection("To Review Matches", toReviewMatches, "to-review", true)}
+    ${renderSection("Reviewed Matches", reviewedMatches, "reviewed", false)}
     ${renderSection("Ongoing Matches", onGoingMatches, "ongoing", true)}
     ${renderSection("Upcoming Matches", upcomingMatches, "scheduled", true)}
     ${renderSection("Projected Matches", projectedMatches, "projected", false)}
@@ -224,8 +243,8 @@ function applyFilter() {
 async function loadData() {
     try {
         const [matchesResponse, teamsResponse] = await Promise.all([
-            fetch(DATA_URL),
-            fetch(TEAMS_URL),
+            fetch(getDataUrl()),
+            fetch(getTeamsUrl()),
         ]);
 
         if (!matchesResponse.ok) {
@@ -271,4 +290,5 @@ async function loadData() {
 }
 
 searchEl.addEventListener("input", applyFilter);
+window.addEventListener("ratingschange", applyFilter);
 loadData();
