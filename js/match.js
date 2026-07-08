@@ -2,7 +2,6 @@ const DATA_URL = "https://raw.githubusercontent.com/openfootball/worldcup.json/m
 const TEAMS_URL = "https://raw.githubusercontent.com/openfootball/worldcup.json/refs/heads/master/2026/worldcup.teams.json";
 const MATCHES_STORAGE_KEY = "rate-wc-matches";
 const TEAMS_STORAGE_KEY = "rate-wc-teams";
-const RATE_STORAGE_KEY = "rate-wc-rates";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -129,8 +128,24 @@ document.getElementById("match").innerHTML = `
             <span class="badge">${match.group ?? "Group Stage"}</span>
         </div>
 
+        <div class="match-rating">
+            ${renderRating(match.id, {
+                size: "lg",
+            })}
+        </div>
+
         ${renderGoals(match)}
         
     </div>
   </div>
 `;
+
+window.addEventListener("ratingschange", () => {
+    const ratingSlot = document.querySelector(".match-rating");
+
+    if (ratingSlot) {
+        ratingSlot.innerHTML = renderRating(match.id, {
+            size: "lg",
+        });
+    }
+});
