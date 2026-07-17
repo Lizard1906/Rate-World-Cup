@@ -129,7 +129,7 @@ function formatScore(match) {
     const away = match?.score?.ft?.[1];
 
     if (Number.isFinite(home) && Number.isFinite(away)) {
-        return `${home} x ${away}`;
+        return `${home} - ${away}`;
     }
 
     return "vs";
@@ -159,9 +159,7 @@ function getRoundLabel(match) {
 }
 
 function renderMatch(match, variant) {
-    const played = variant === "past";
-    const score = formatScore(match);
-    const displayScore = played ? score : "vs";
+    const displayScore = formatScore(match);
     const matchLabel = `${match.team1} vs ${match.team2}`;
 
     return `
