@@ -53,6 +53,10 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.stats-grid.four {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .stats-list {
     display: grid;
     gap: 10px;

@@ -246,6 +246,8 @@ function computeTournamentStats() {
 
     const scorerGoals = {};
     const scorerTeams = {};
+    const ownScorerGoals = {};
+    const ownScorerTeams = {};
     const teamGoals = {};
     const teamWins = {};
 
@@ -270,9 +272,16 @@ function computeTournamentStats() {
                 return;
             }
 
-            scorerGoals[goal.name] = (scorerGoals[goal.name] ?? 0) + 1;
-            scorerTeams[goal.name] = scorerTeams[goal.name] ?? {};
-            scorerTeams[goal.name][homeTeam] = (scorerTeams[goal.name][homeTeam] ?? 0) + 1;
+            if (goal.owngoal) {
+                ownScorerGoals[goal.name] = (ownScorerGoals[goal.name] ?? 0) + 1;
+                ownScorerTeams[goal.name] = ownScorerTeams[goal.name] ?? {};
+                ownScorerTeams[goal.name][awayTeam] = (ownScorerTeams[goal.name][awayTeam] ?? 0) + 1;
+            } else {
+                scorerGoals[goal.name] = (scorerGoals[goal.name] ?? 0) + 1;
+                scorerTeams[goal.name] = scorerTeams[goal.name] ?? {};
+                scorerTeams[goal.name][homeTeam] = (scorerTeams[goal.name][homeTeam] ?? 0) + 1;
+            }
+
         });
 
         (match.goals2 || []).forEach((goal) => {
@@ -280,14 +289,31 @@ function computeTournamentStats() {
                 return;
             }
 
-            scorerGoals[goal.name] = (scorerGoals[goal.name] ?? 0) + 1;
-            scorerTeams[goal.name] = scorerTeams[goal.name] ?? {};
-            scorerTeams[goal.name][awayTeam] = (scorerTeams[goal.name][awayTeam] ?? 0) + 1;
+            if (goal.owngoal) {
+                ownScorerGoals[goal.name] = (ownScorerGoals[goal.name] ?? 0) + 1;
+                ownScorerTeams[goal.name] = ownScorerTeams[goal.name] ?? {};
+                ownScorerTeams[goal.name][homeTeam] = (ownScorerTeams[goal.name][homeTeam] ?? 0) + 1;
+            } else {
+                scorerGoals[goal.name] = (scorerGoals[goal.name] ?? 0) + 1;
+                scorerTeams[goal.name] = scorerTeams[goal.name] ?? {};
+                scorerTeams[goal.name][awayTeam] = (scorerTeams[goal.name][awayTeam] ?? 0) + 1;
+            }
          });
      });
  
     const topScorers = rankEntries(scorerGoals, "golos").map((item) => {
         const teamsForPlayer = scorerTeams[item.name] ?? {};
+        const primaryTeam = Object.entries(teamsForPlayer)
+            .sort((a, b) => b[1] - a[1])?.[0]?.[0];
+
+        return {
+            ...item,
+            nameHtml: primaryTeam ? withTeamFlag(primaryTeam, item.name) : item.name,
+        };
+    });
+
+    const topOwnScorers = rankEntries(ownScorerGoals, "golos").map((item) => {
+        const teamsForPlayer = ownScorerTeams[item.name] ?? {};
         const primaryTeam = Object.entries(teamsForPlayer)
             .sort((a, b) => b[1] - a[1])?.[0]?.[0];
 
@@ -312,6 +338,14 @@ function computeTournamentStats() {
         "top-scorers",
         "Top Scorers",
         topScorers,
+        (item) => item.value,
+    );
+
+    renderTopBlock(
+        "top-own-scorers",
+        "top-own-scorers",
+        "Top Own Scorers",
+        topOwnScorers,
         (item) => item.value,
     );
 
