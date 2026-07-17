@@ -113,8 +113,8 @@ function getModalItems(items) {
     return state.modalAscending ? [...items].reverse() : items;
 }
 
-function renderTopBlock(targetId, key, title, items, formatter) {
-    const target = document.getElementById(targetId);
+function renderTopBlock(key, title, items, formatter) {
+    const target = document.getElementById(key);
 
     if (!target) {
         return;
@@ -194,7 +194,6 @@ function computePersonalStats() {
 
     const teamRatings = {};
     const teamRatingCount = {};
-    const watchedTeams = {};
 
     watchedMatches.forEach((match) => {
         const rating = state.ratings[match.id];
@@ -206,11 +205,10 @@ function computePersonalStats() {
         [match.team1, match.team2].forEach((team) => {
             teamRatings[team] = (teamRatings[team] ?? 0) + rating;
             teamRatingCount[team] = (teamRatingCount[team] ?? 0) + 1;
-            watchedTeams[team] = (watchedTeams[team] ?? 0) + 1;
         });
     });
 
-    const highestRatedTeams = Object.keys(teamRatings)
+    const avgRatingTeams = Object.keys(teamRatings)
         .map((team) => ({
             name: team,
             nameHtml: withTeamFlag(team, team),
@@ -219,24 +217,47 @@ function computePersonalStats() {
         }))
         .sort((a, b) => b.value - a.value || b.matches - a.matches || a.name.localeCompare(b.name));
 
-    const mostWatchedTeams = rankEntries(watchedTeams, "jogos").map((item) => ({
+    const numWatchedTeams = rankEntries(teamRatingCount, "jogos").map((item) => ({
         ...item,
         nameHtml: withTeamFlag(item.name, item.name),
     }));
 
+    const pctWatchedTeams = Object.keys(teamRatingCount)
+        .map((team) => {
+            const watched = teamRatingCount[team];
+            const total = state.matches.filter((match) => match.team1 === team || match.team2 === team).length;
+            let pct = total > 0 ? (watched / total) * 100 : 0; // round to 2 decimal places
+            pct = Math.round(pct * 100) / 100;
+
+            return {
+                name: team,
+                nameHtml: withTeamFlag(team, team),
+                value: pct,
+                watched,
+                total,
+            };
+        })
+        .sort((a, b) => b.value - a.value || b.watched - a.watched || a.name.localeCompare(b.name));
+
+
     renderTopBlock(
-        "best-rated-teams",
-        "best-rated-teams",
-        "Best Average Rating by Team",
-        highestRatedTeams,
+        "avg-game-rating-team",
+        "Average Game Rating by Team",
+        avgRatingTeams,
         (item) => item.value.toFixed(2),
     );
 
     renderTopBlock(
-        "most-watched-teams",
-        "most-watched-teams",
-        "Most Watched Teams",
-        mostWatchedTeams,
+        "games-watched-team",
+        "Games Watched by Team",
+        numWatchedTeams,
+        (item) => item.value,
+    );
+
+    renderTopBlock(
+        "games-watched-team-pct",
+        "Games Watched by Team (%)",
+        pctWatchedTeams,
         (item) => item.value,
     );
 }
@@ -335,14 +356,12 @@ function computeTournamentStats() {
  
     renderTopBlock(
         "top-scorers",
-        "top-scorers",
         "Top Scorers",
         topScorers,
         (item) => item.value,
     );
 
     renderTopBlock(
-        "top-own-scorers",
         "top-own-scorers",
         "Top Own Scorers",
         topOwnScorers,
@@ -351,14 +370,12 @@ function computeTournamentStats() {
 
     renderTopBlock(
         "top-teams-goals",
-        "top-teams-goals",
         "Top Teams by Goals",
         topTeamsGoals,
         (item) => item.value,
     );
 
     renderTopBlock(
-        "top-teams-wins",
         "top-teams-wins",
         "Top Teams by Wins",
         topTeamsWins,
