@@ -125,8 +125,8 @@ document.getElementById("match").innerHTML = `
         </div>
 
         <div class="match-badges">
+            ${match.group ? `<span class="badge">${match.group}</span>` : ""}
             <span class="badge">${match.round}</span>
-            <span class="badge">${match.group ?? "Group Stage"}</span>
         </div>
 
         <div class="match-rating">
